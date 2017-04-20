@@ -1,1 +1,1 @@
-require('./index')()
+return require('./index')()
