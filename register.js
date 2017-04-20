@@ -1,1 +1,1 @@
-return require('./index')()
+module.exports = require('./index')

@@ -18,26 +18,39 @@ npm install --save-dev --save-exact jsdom jsdom-global
 
 ## Usage
 
-Just invoke it to turn your Node.js environment into a DOM environment.
+Just invoke init to turn your Node.js environment into a DOM environment.
 
 ```js
-require('jsdom-global')()
+const jsdomGlobal = require('jsdom-global')
+jsdomGlobal.init()
 
 // you can now use the DOM
 document.body.innerHTML = 'hello'
 ```
 
-You may also pass parameters to jsdomGlobal() like so: `require('jsdom-global')(html, options)`.
+You may also pass parameters to jsdomGlobal() like so: `jsdomGlobal.init(html, options)`.
 Check the [jsdom.jsdom()][] documentation for valid values for the `options` parameter.
 
 To clean up after itself, just invoke the function it returns.
 
 ```js
-var cleanup = require('jsdom-global')()
+const jsdomGlobal = require('jsdom-global')
+jsdomGlobal.init()
 
 // do things
 
-cleanup()
+jsdomGlobal.cleanup()
+```
+
+To reset clean then reinitialize.
+
+```js
+const jsdomGlobal = require('jsdom-global')
+jsdomGlobal.init()
+
+// do things
+
+jsdomGlobal.reset()
 ```
 
 ## Tape
@@ -45,7 +58,8 @@ cleanup()
 In [tape][], run it before your other tests.
 
 ```js
-require('jsdom-global')()
+const jsdomGlobal = require('jsdom-global')
+jsdomGlobal.init()
 
 test('your tests', (t) => {
   /* and so on... */
@@ -64,11 +78,12 @@ __Advanced:__ For finer control, you can instead add it via [mocha]'s `before` a
 
 ```js
 before(function () {
-  this.jsdom = require('jsdom-global')()
+  const jsdomGlobal = require('jsdom-global')
+  this.jsdom = jsdomGlobal
 })
 
 after(function () {
-  this.jsdom()
+  this.jsdom().reset()
 })
 ```
 
@@ -81,7 +96,8 @@ after(function () {
 If you prefer to use `import` rather than `require`, you might want to use `jsdom-global/register` instead. Place it on top of your other import calls.
 
 ```js
-import 'jsdom-global/register'
+import jsdomGlobal from 'jsdom-global/register'
+jsdomGlobal.init()
 import React from 'react'
 import jQuery from 'jquery'
 // ...
@@ -100,7 +116,8 @@ If you use [Browserify] on your tests (eg: [smokestack], [tape-run], [budo], [hi
 * Writing your tests (`test.js`):
 
   ```js
-  require('jsdom-global')()
+  require('jsdom-global')
+  jsdomGlobal.init()
 
   // ...do your tests here
   ```

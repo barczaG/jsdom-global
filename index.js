@@ -7,7 +7,7 @@ var KEYS = require('./keys')
 var defaultHtml = '<!doctype html><html><head><meta charset="utf-8">' +
   '</head><body></body></html>'
 
-module.exports = function globalJsdom (html, options) {
+function init (html, options) {
   if (html === undefined) {
     html = defaultHtml
   }
@@ -37,10 +37,15 @@ module.exports = function globalJsdom (html, options) {
   global.window = window
   window.console = global.console
   document.destroy = cleanup
-
-  function cleanup () {
-    KEYS.forEach(function (key) { delete global[key] })
-  }
-
-  return cleanup
 }
+
+function cleanup () {
+  KEYS.forEach(function (key) { delete global[key] })
+}
+
+function reset (html, options) {
+  cleanup()
+  init(html, options)
+}
+
+module.exports = {init, reset, cleanup}
